@@ -1,0 +1,32 @@
+body{
+    height:100%;
+    width:100%
+}
+.main-nav h5:nth-of-type(1):before {
+    text-indent:0;
+    content:'Hello from HTML,';
+} 
+.main-nav ul{
+    display: block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.main-nav li{
+    width: 33.3%;
+    float: left;
+    text-align: center;
+}
+.main-nav li a{
+    background-color: purple;
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    border-radius: 16px;
+    font-size: 14px;
+    padding: 0 15px;
+    color: white;
+    text-decoration: none;
+    white-space: pre;
+}

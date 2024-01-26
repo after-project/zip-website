@@ -1,0 +1,134 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    <script src="js/jquery-3.6.1.min.js" ></script>
+    <Script>
+        var requestArray=[];
+        var requestCount = 0;        
+        click_count= 0;
+        function RegisterRequest(lastID,requestCallback){
+            var obj = new Object();
+            obj.text ="my text i=" + (lastID + 1);
+            obj.requestCallback = requestCallback;
+            var id = requestArray.push(obj);
+            requestCount = id;
+            return id;
+        }
+        function getRequestID(id){
+            this.response = function(data){
+                this.data = data;
+                return this
+            }
+            this.trigger = function(){
+                requestArray[id-1].requestCallback(this.data);
+            }
+            return this
+        }
+        $(function(){
+            var html = $(".main-wrapper");
+            /* My Profile Button Click */
+            $(".button-profile").off("click").on("click",function(){
+                $(html).empty().html("loading...")
+                var lastID = requestCount;
+                var id = RegisterRequest(lastID,function(response){
+                    if(typeof response !== 'undefined'){
+                        if( typeof response.error.message !== 'undefined' ){
+                                // script error
+                        }else
+                        if(typeof response.error.xhr !== 'undefined'){
+                                // connection error
+                        }else{
+                            var html = $(".main-wrapper");
+                            $(html).empty().html("<br><br><br><br><br>")
+                            $("<p>").css("text-align","center").html('name: "' + response.data.customer_name + '"').appendTo(html)
+                            $("<p>").css("text-align","center").html('email: "' + response.data.customer_email + '"').appendTo(html)
+                            $("<p>").css("text-align","center").html('phone: "' + response.data.customer_phone + '"').appendTo(html)
+                        }
+                    }else{
+                        // response error
+                    }
+                })
+                var url = 'https://realappexample.shop/customer_profile.json';
+                android.get(id,url);
+            })
+            /* My Purchases Button Click */
+            $(".button-purchases").off("click").on("click",function(){                
+                $(html).empty().html("loading...")
+                var lastID = requestCount;
+                var id = RegisterRequest(lastID,function(response){
+                    if(typeof response !== 'undefined'){
+                        if( typeof response.error.message !== 'undefined' ){
+                                // script error
+                        }else
+                        if(typeof response.error.xhr !== 'undefined'){
+                                // connection error
+                        }else{
+                            $(html).empty().html("<br><br><br><br><br>")
+                            var my_purchases_json = (response.data);
+                            var purchases_list = my_purchases_json.purchases_list;
+                            $.each((purchases_list), function(i, item) {
+                                var product_id = purchases_list[i].product_id;
+                                var product_name = purchases_list[i].product_name;
+                                var purchase_quantity = purchases_list[i].purchase_quantity;
+                                var purchase_status = purchases_list[i].purchase_status;
+                                var purchase_stage = purchases_list[i].purchase_stage;
+                                var product_info = "product_id: "+product_id+" product_name: "+product_name+" purchase_quantity: "+purchase_quantity+" purchase_status: "+purchase_status+" purchase_stage: "+purchase_stage+" <br> --------------<br>"
+                                $("<p>").html(product_info).appendTo(html)
+                            });
+                        }
+                    }else{
+                        // response error
+                    }
+                })
+                var url = 'https://realappexample.shop/purchases.json';
+                android.get(id,url)
+            })
+            /* Shop Now Button Click */
+            $(".button-shop").off("click").on("click",function(){
+                $(html).empty().html("loading...")
+                var lastID = requestCount;
+                var id = RegisterRequest(lastID,function(response){
+                    if(typeof response !== 'undefined'){
+                        if( typeof response.error.message !== 'undefined' ){
+                            // script error
+                        }else
+                        if(typeof response.error.xhr !== 'undefined'){
+                            // connection error
+                        }else{
+                            $(html).empty().html("<br><br><br><br><br>")
+                            var shop_products_json = (response.data);
+                            var products_list = shop_products_json.products_list;
+                            $.each((products_list), function(i, item) {
+                                var product_id = products_list[i].product_id;
+                                var product_name = products_list[i].product_name;
+                                var amount = products_list[i].amount;
+                                var product_info = "product_id: "+product_id+" product_name: "+product_name+" amount: "+amount+" <br> --------------<br>"
+                                $("<p>").html(product_info).appendTo(html)
+                            });
+                        }
+                    }else{
+                        // response error
+                    }
+                })
+                var url = 'https://realappexample.shop/products.json';
+                android.get(id,url)
+            })
+            $(".button-profile").trigger("click");
+        })
+    </Script>
+</head>
+<body>
+<div class="main-nav">
+    <h5> '' ! You have 0 new messages.</h5>
+    <ul>
+        <li class=""><a href="#" class="button-profile">My Profile</a></li>
+        <li class=""><a href="#" class="button-purchases">My Purchases</a></li>
+        <li class=""><a href="#" class="button-shop">Shop Now</a></li>
+    </ul>
+</div>
+<div class="main-wrapper">
+    <div>
+    </div>
+</div>
+</body>
+</html>
